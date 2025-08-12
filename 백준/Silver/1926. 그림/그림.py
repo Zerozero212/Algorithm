@@ -1,4 +1,7 @@
 from collections import deque
+import sys
+input = sys.stdin.readline
+
 dir1 = [(-1,0),(1,0),(0,1),(0,-1)]
 
 def bfs(x, y):

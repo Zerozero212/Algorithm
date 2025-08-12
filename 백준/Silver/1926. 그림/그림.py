@@ -31,7 +31,9 @@ for i in range(N):
             temp = 0
             bfs(i, j)
             count += 1
+            # 함수 안에서 비교하게 되면, 다 탐색하기도 전에 비교하면서 오답이 나오기도 함.
             area_max = max(area_max, temp)
 
 print(count)
+
 print(area_max)

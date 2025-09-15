@@ -1,15 +1,13 @@
 from collections import deque
 def bfs(s):
     q=deque([(s,0)])
-    v=[0]*(N+1)
     ans=[0]*(N+1)
-    v[s]=1
+    ans[s]=1
     while q:
         start,depth=q.popleft()
-        ans[start]=depth
         for num in graph[start]:
-            if not v[num]: 
-                v[num]=1
+            if not ans[num]: 
+                ans[num]=depth+1
                 q.append((num,depth+1))
     return ans
 

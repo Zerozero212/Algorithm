@@ -1,31 +1,28 @@
-N=int(input())
-jewel_cnt = [0]*N
-jewel_price = []
-for n in range(N):
-    jewel_cnt[n]=int(input())
-    jewel_price.append(list(map(int,input().split())))
-
-total = [-1e9]*N
-idx = [(0,0) for _ in range(N)]
-
-for n in range(N):
-    for l in range(jewel_cnt[n]):
-        sub_total=jewel_price[n][l]
-        if sub_total>total[n]:
-                total[n]=sub_total
-                idx[n]=(l,l)
-        elif sub_total==total[n]:
-            if idx[n][1]-idx[n][0]>0:
-                idx[n]=(l,l)
-        for r in range(l+1,jewel_cnt[n]):
-            sub_total+=jewel_price[n][r]
-            if sub_total>total[n]:
-                total[n]=sub_total
-                idx[n]=(l,r)
-            elif sub_total==total[n]:
-                if idx[n][1]-idx[n][0]>r-l:
-                    idx[n]=(l,r)
-
-print(sum(total))
-for l,r in idx:
-    print(l+1,r+1)
+c = 0               # 전체 보석 가치 총합
+LR = []             # 각 줄에서 (시작, 끝) 인덱스를 저장
+for _ in range(int(input())):
+    n = int(input())                   # 한 줄에 있는 보석 개수
+    L = list(map(int,input().split())) # 보석 가치 리스트
+    l, r = 0, 0                        # 현재 줄에서 최대 구간의 (왼쪽, 오른쪽) 인덱스
+    dp = [0]*n                         # 각 위치까지의 최대 연속합 저장
+    dp[0] = L[0]
+    
+    m = L[0]        # 현재 줄에서의 최대 부분합
+    x = 0           # 현재 구간의 시작 인덱스 후보
+    for i in range(1,n):
+        if dp[i-1] <= 0:
+            dp[i] = L[i]
+            x = i
+            if L[i] > m or (L[i] == m and r-l > 0):
+                l,r = i,i
+        else:
+            dp[i] = dp[i-1]+L[i]
+            if dp[i] > m or (dp[i] == m and r-l > i-x):
+                l,r = x,i
+        m = max(m,dp[i])
+    
+    c += m
+    LR.append([l+1,r+1])
+print(c)
+for i in LR:
+    print(*i)

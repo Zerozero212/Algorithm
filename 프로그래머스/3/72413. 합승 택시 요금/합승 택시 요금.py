@@ -2,22 +2,21 @@ from heapq import heappush,heappop
 
 def solution(n, s, a, b, fares):
     
-    def daijckstra(n,start,end=0):
+    def daijckstra(start):
         costs = [10**18]*(n+1)
         costs[start]=0
         pq = [(0,start)]
 
         while pq:
-            c,n = heappop(pq)
-            if costs[n] < c: continue
-            if n==end: return c
+            c,node = heappop(pq)
+            if costs[node] < c: continue
 
-            for nxt_c,nxt_n in graph[n]:
+            for nxt_c,nxt_node in graph[node]:
                 new_c = c+nxt_c
-                if new_c < costs[nxt_n]:
-                    costs[nxt_n]=new_c
-                    heappush(pq,(new_c,nxt_n))
-        if end: return 10**18
+                if new_c < costs[nxt_node]:
+                    costs[nxt_node]=new_c
+                    heappush(pq,(new_c,nxt_node))
+
         return costs
     
     graph=[[] for _ in range(n+1)]
@@ -25,12 +24,10 @@ def solution(n, s, a, b, fares):
         graph[u].append((c,v))
         graph[v].append((c,u))
     
-    sub_cost = daijckstra(n,s)
-    ans = 10**18
-    for i in range(1,n+1):
-        if ans < sub_cost[i]: continue
-        tmp_ans = sub_cost[i] + daijckstra(n,i,a) + daijckstra(n,i,b)
-        if tmp_ans < ans: 
-            ans = tmp_ans
+    from_s = daijckstra(s)
+    from_a = daijckstra(a)
+    from_b = daijckstra(b)
     
+    ans = min(from_s[i] + from_a[i] + from_b[i] for i in range(1,n+1))
+
     return ans

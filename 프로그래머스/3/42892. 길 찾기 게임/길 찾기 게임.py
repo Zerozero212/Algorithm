@@ -2,58 +2,48 @@ import sys
 sys.setrecursionlimit(10**6)
 
 def solution(nodeinfo):
-    # 1. 인덱스 붙이기
-    nodes = [(x, y, i+1) for i, (x, y) in enumerate(nodeinfo)]
-
-    # 2. y 내림차순, x 오름차순 정렬 (루트가 맨 위로)
-    nodes.sort(key=lambda n: (-n[1], n[0]))
-
-    # 3. 트리 구성 (딕셔너리로 자식 관리)
-    tree = {idx: [None, None] for _, _, idx in nodes}
+    nodes = [(idx+1,x,y) for idx,(x,y) in enumerate(nodeinfo)]
+    nodes.sort(key=lambda n: (-n[2],n[1]))
+    tree = {idx+1 : [None,None] for idx in range(len(nodes))}
     root = nodes[0]
 
-    for x, y, idx in nodes[1:]:
-        parent_x, parent_y, parent_idx = root
+    for idx,x,y in nodes[1:]:
         cur = root
         while True:
-            if x < cur[0]:
-                # 왼쪽 자식
-                left = tree[cur[2]][0]
-                if left is None:
-                    tree[cur[2]][0] = (x, y, idx)
-                    break
+            if x<cur[1]:
+                left = tree[cur[0]][0]
+                if left:
+                    cur=left
+                    continue
                 else:
-                    cur = left
+                    tree[cur[0]][0] = (idx,x,y)
+                    break
             else:
-                # 오른쪽 자식
-                right = tree[cur[2]][1]
-                if right is None:
-                    tree[cur[2]][1] = (x, y, idx)
-                    break
+                right = tree[cur[0]][1]
+                if right:
+                    cur=right
+                    continue
                 else:
-                    cur = right
+                    tree[cur[0]][1] = (idx,x,y)
+                    break
+    
+    def pre_order(node):
+        if node is None: return
+        pre_order_path.append(node[0])
+        pre_order(tree[node[0]][0])
+        pre_order(tree[node[0]][1])
 
-    # 4. 전위 순회
-    preorder_result = []
-    def preorder(node):
-        if node is None:
-            return
-        preorder_result.append(node[2])
-        preorder(tree[node[2]][0])
-        preorder(tree[node[2]][1])
+    def post_order(node):
+        if node is None: return
+        post_order(tree[node[0]][0])
+        post_order(tree[node[0]][1])
+        post_order_path.append(node[0])
 
-    # 5. 후위 순회
-    postorder_result = []
-    def postorder(node):
-        if node is None:
-            return
-        postorder(tree[node[2]][0])
-        postorder(tree[node[2]][1])
-        postorder_result.append(node[2])
-
-    preorder(root)
-    postorder(root)
-
-    # 6. 반환
-    answer = [preorder_result, postorder_result]
+    pre_order_path = []
+    post_order_path = []
+    pre_order(root)
+    post_order(root)
+    answer = [pre_order_path,post_order_path]
     return answer
+
+print(solution([[5,3],[11,5],[13,3],[3,5],[6,1],[1,3],[8,6],[7,2],[2,2]]))

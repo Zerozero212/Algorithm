@@ -1,30 +1,26 @@
-def find_set(x):
-    if x==parents[x]: return x
-    parents[x] = find_set(parents[x])
-    return parents[x]
+from heapq import heappush, heappop
+def prim():
+    pq = [(0,1)]
+    MST = [0]*(V+1)
+    min_sum = 0
 
-def union(a,b):
-    ra = find_set(a)
-    rb = find_set(b)
-    if ra==rb: return 0
-    parents[ra]=rb
-    return 1
+    while pq:
+        w,node = heappop(pq)
+        if MST[node]: continue
+        MST[node]=1
+        min_sum += w
+
+        for nxt_w,nxt_node in graph[node]:
+            if MST[nxt_node]: continue
+            heappush(pq,(nxt_w,nxt_node))
+    return min_sum
 
 V,E = map(int,input().split())
-graph = []
+graph=[[] for _ in range(V+1)]
+
 for _ in range(E):
     u,v,w = map(int,input().split())
-    graph.append((u,v,w))
+    graph[u].append((w,v))
+    graph[v].append((w,u))
 
-graph.sort(key=lambda x: x[2])
-parents=[i for i in range(V+1)]
-cnt=0
-ans=0
-
-for u,v,w in graph:
-    if union(u,v):
-        cnt+=1
-        ans+=w
-        if cnt==V-1: break
-
-print(ans)
+print(prim())

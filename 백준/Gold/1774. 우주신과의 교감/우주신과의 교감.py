@@ -13,21 +13,24 @@ def union(a,b):
 N,M = map(int,input().split())
 
 coor = [list(map(int,input().split())) for _ in range(N)]
-
-graph=[]
-for i in range(N-1):
-    for j in range(i+1,N):
-        w = ((coor[i][0]-coor[j][0])**2+(coor[i][1]-coor[j][1])**2)**0.5
-        graph.append((i+1,j+1,w))
-graph.sort(key=lambda x: x[2])
+exception_list = set()
 
 parents=[i for i in range(N+1)]
 
 cnt=0
 for _ in range(M):
     u,v = map(int,input().split())
+    exception_list.add((u,v))
     if union(u,v):
         cnt+=1
+
+graph=[]
+for i in range(N-1):
+    for j in range(i+1,N):
+        if (i+1,j+1) in exception_list or (j+1,i+1) in exception_list: continue
+        w = ((coor[i][0]-coor[j][0])**2+(coor[i][1]-coor[j][1])**2)**0.5
+        graph.append((i+1,j+1,w))
+graph.sort(key=lambda x: x[2])
 
 ans=0
 for u,v,w in graph:

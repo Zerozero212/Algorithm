@@ -21,6 +21,8 @@ ans=0
 
 for i in range(N):
     for j in range(M):
-        if arr[i][j]=='L': bfs(i,j)
+        if arr[i][j]=='W': continue
+        if 0<i<N-1 and 0<j<M-1 and (arr[i-1][j],arr[i+1][j],arr[i][j-1],arr[i][j+1])==('L','L','L','L'): continue
+        bfs(i,j)
 
 print(ans)

@@ -1,27 +1,27 @@
-from heapq import heappop,heappush
-INF=1e9
-city=int(input())
-bus=int(input())
+from heapq import heappush,heappop
+INF = 10**12
+def sol(s):
+    dists = [INF]*(N+1)
+    dists[s]=0
+    pq = [(0,s)]
 
-bus_cost = [[] for _ in range(city+1)]
+    while pq:
+        d,n = heappop(pq)
+        if n==e: return d
+        if dists[n]<d: continue
 
-for _ in range(bus):
-    s,e,c = map(int,input().split())
-    bus_cost[s].append((c,e))
-start,end=map(int,input().split())
+        for nxt_d,nxt_n in graph[n]:
+            new_d = d+nxt_d
+            if new_d < dists[nxt_n]:
+                dists[nxt_n]=new_d
+                heappush(pq,(new_d,nxt_n))
 
-pq = [(0,start)]
-dists=[INF]*(city+1)
-dists[start]=0
 
-while pq:
-    dist,node = heappop(pq)
-    if dists[node] < dist: continue
-
-    for next_dist,next_node in bus_cost[node]:
-        new_cost = dist+next_dist
-        if new_cost < dists[next_node]:
-            dists[next_node]=new_cost
-            heappush(pq,(new_cost,next_node))
-
-print(dists[end])
+N = int(input())
+M = int(input())
+graph = [[] for _ in range(N+1)]
+for _ in range(M):
+    u,v,w = map(int,input().split())
+    graph[u].append((w,v))
+s,e = map(int,input().split())
+print(sol(s))

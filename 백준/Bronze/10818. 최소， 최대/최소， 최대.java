@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -6,15 +5,21 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         int N = sc.nextInt();
-        int[] arr = new int[N];
+        int minVal = Integer.MAX_VALUE;
+        int maxVal = Integer.MIN_VALUE;
 
-        for (int i = 0; i < N; i++) {
-            arr[i] = sc.nextInt();
+        for (int i=0; i<N; i++) {
+            int num = sc.nextInt();
+
+            if (num > maxVal) {
+                maxVal = num;
+            }
+            if (num < minVal) {
+                minVal = num;
+            }
         }
 
-        Arrays.sort(arr);
-        System.out.println(arr[0] + " " + arr[N - 1]);
-
+        System.out.println(minVal + " " + maxVal);
         sc.close();
     }
 }

@@ -1,30 +1,28 @@
 import sys
 input = sys.stdin.readline
-INF = 1e9
+INF = 10**9
 
-N = int(input())
-M = int(input())
+n = int(input())
+m = int(input())
 
-costs = [[INF]*N for _ in range(N)]
+dist = [[INF]*n for _ in range(n)]
+for i in range(n):
+    dist[i][i] = 0
 
-for _ in range(M):
-    u, v, w = map(int, input().split())
-    costs[u-1][v-1] = min(costs[u-1][v-1], w)
+for _ in range(m):
+    a, b, c = map(int, input().split())
+    dist[a-1][b-1] = min(dist[a-1][b-1], c)
 
-for k in range(N):
-    for i in range(N):
+for k in range(n):
+    for i in range(n):
+        for j in range(n):
+            if dist[i][j] > dist[i][k] + dist[k][j]:
+                dist[i][j] = dist[i][k] + dist[k][j]
 
-        if k==i: continue
-
-        for j in range(N):
-            if k==j or i==j: continue
-            if costs[i][j] > costs[i][k] + costs[k][j]:
-                costs[i][j] = costs[i][k] + costs[k][j]
-
-for i in range(N):
-    for j in range(N):
-        if costs[i][j] == INF:
+for i in range(n):
+    for j in range(n):
+        if dist[i][j] == INF:
             print(0, end=' ')
         else:
-            print(costs[i][j], end=' ')
+            print(dist[i][j], end=' ')
     print()

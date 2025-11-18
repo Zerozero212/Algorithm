@@ -10,20 +10,20 @@ for _ in range(M):
     u,v,w = map(int,input().split())
     graph[u-1][v-1] = w
     graph[v-1][u-1] = w
-    paths[u-1][v-1] = [u,v]
-    paths[v-1][u-1] = [v,u]
+    paths[u-1][v-1] = v
+    paths[v-1][u-1] = u
 
 for k in range(N):
     for i in range(N):
         for j in range(N):
             if graph[i][j] > graph[i][k] + graph[k][j]:
                 graph[i][j] = graph[i][k] + graph[k][j]
-                paths[i][j] = paths[i][k] + paths[k][j][1:]
+                paths[i][j] = paths[i][k]
 
 for i in range(N):
     for j in range(N):
         if i==j:
             print('-',end=' ')
         else:
-            print(paths[i][j][1],end=' ')
+            print(paths[i][j],end=' ')
     print()

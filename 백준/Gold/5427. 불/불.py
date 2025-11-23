@@ -1,38 +1,40 @@
 from collections import deque
 dir1 = [(0,1),(0,-1),(1,0),(-1,0)]
-def bfs(p,f):
-    person_q = deque([p])
-    fire_q = deque([*f])
-    while person_q:
-        for _ in range(len(fire_q)):
-            i,j,t = fire_q.popleft()
-            for di,dj in dir1:
-                ni,nj = i+di,j+dj
-                if 0 <= ni < N and 0 <= nj < M and arr[ni][nj] in '.@':
-                    arr[ni][nj] = '*'
-                    fire_q.append((ni,nj,t+1))
-        for _ in range(len(person_q)):
-            i,j,t = person_q.popleft()
-            if i in [0,N-1] or j in [0,M-1]: return t+1
-            for di,dj in dir1:
-                ni,nj = i+di,j+dj
-                if 0 <= ni < N and 0 <= nj < M and arr[ni][nj] == '.':
-                    arr[ni][nj] = '@'
-                    person_q.append((ni,nj,t+1))
+
+def sol():
+    while my_pos:
+        f_num = len(fire_pos)
+        m_num = len(my_pos)
+        for _ in range(f_num):
+            fx,fy = fire_pos.popleft()
+            for dx,dy in dir1:
+                nfx,nfy = fx+dx, fy+dy
+                if 0<=nfx<N and 0<=nfy<M and maze[nfx][nfy] not in '#*':
+                    maze[nfx][nfy] = '*'
+                    fire_pos.append((nfx,nfy))
+
+        for _ in range(m_num):
+            cnt,mx,my = my_pos.popleft()
+            if mx in (0,N-1) or my in (0,M-1): return cnt+1
+            for dx,dy in dir1:
+                nmx,nmy = mx+dx,my+dy
+                if 0<=nmx<N and 0<=nmy<M and maze[nmx][nmy]=='.':
+                    maze[nmx][nmy] = '@'
+                    my_pos.append((cnt+1,nmx,nmy))
+        
     return 'IMPOSSIBLE'
 
 T = int(input())
-for tc in range(T):
+for _ in range(T):
     M,N = map(int,input().split())
-    arr = []
-    person_x = person_y = 0
-    fire_idx_list = []
+    maze = [list(input()) for _ in range(N)]
+
+    fire_pos = deque()
+    my_pos = deque()
 
     for i in range(N):
-        temp = list(input())
         for j in range(M):
-            if temp[j] == '@': person_x,person_y = i,j
-            if temp[j] == '*': fire_idx_list.append((i,j,0))
-        arr.append(temp)
+            if maze[i][j]=='@': my_pos.append((0,i,j))
+            elif maze[i][j]=='*': fire_pos.append((i,j))
 
-    print(bfs((person_x,person_y,0),fire_idx_list))
+    print(sol())

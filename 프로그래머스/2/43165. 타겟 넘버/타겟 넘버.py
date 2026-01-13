@@ -1,11 +1,14 @@
-from collections import deque
 def solution(numbers, target):
-    answer = 0
-    q=deque([(0,0)])
-    while q:
-        idx,sum = q.popleft()
-        if idx==len(numbers) and sum == target: answer += 1
-        if idx < len(numbers):
-            q.append((idx+1,sum+numbers[idx]))
-            q.append((idx+1,sum-numbers[idx]))
-    return answer
+    cnt = 0
+
+    def dfs(idx,total,sum,t):
+        nonlocal cnt
+        if idx==total:
+            if sum == t: cnt += 1
+            return
+        
+        dfs(idx+1,total,sum+numbers[idx],t)
+        dfs(idx+1,total,sum-numbers[idx],t)
+
+    dfs(0,len(numbers),0,target)
+    return cnt
